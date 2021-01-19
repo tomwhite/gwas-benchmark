@@ -38,3 +38,12 @@ Copy notebook from VM back to local machine
 gcloud beta compute scp --zone "us-central1-a" "ukb-tw-gwas-benchmark:/home/tom/gwas-benchmark/gwas_simulation.ipynb" .
 ```
 
+Create a proxy for the Dask UI (when in distributed mode)
+```bash
+gcloud beta compute ssh --zone "us-central1-a" "ukb-tw-gwas-benchmark" --ssh-flag="-L 8799:localhost:8787"
+```
+
+Copy performance report from VM back to local machine 
+```bash
+gcloud beta compute scp --zone "us-central1-a" "ukb-tw-gwas-benchmark:/home/tom/gwas-benchmark/reports" reports
+```
