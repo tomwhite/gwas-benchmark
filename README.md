@@ -43,7 +43,20 @@ Create a proxy for the Dask UI (when in distributed mode)
 gcloud beta compute ssh --zone "us-central1-a" "ukb-tw-gwas-benchmark" --ssh-flag="-L 8799:localhost:8787"
 ```
 
-Copy performance report from VM back to local machine 
+Copy performance report from VM back to local machine and open latest
 ```bash
-gcloud beta compute scp --zone "us-central1-a" "ukb-tw-gwas-benchmark:/home/tom/gwas-benchmark/reports" reports
+gcloud beta compute scp --zone "us-central1-a" "ukb-tw-gwas-benchmark:/home/tom/gwas-benchmark/reports/pr_*.html" reports
+open $(ls -t reports/pr*.html | head -1)
 ```
+
+### Results
+
+Running XY-size on n1-standard-8
+
+| Dask  | Time (s) |
+| ----- | -------- |
+| In-memory, local storage  | 30 |
+| In-memory, GCS  | 70 |
+| Distributed (1 worker), GCS  | 95 |
+
+The distributed timing is roughly similar to the actual GWAS, which took 80s.
