@@ -1,13 +1,40 @@
 ## Setup
 
-- Create an `n1-standard-8` GCE instance w/ Debian 10 (buster) OS
+- Create an `n1-standard-8` GCE instance w/ Debian 10 (buster) OS with 1000GB disk, and full access to all Cloud APIs
 - [Install conda](https://docs.conda.io/projects/conda/en/latest/user-guide/install/linux.html)
+```bash
+curl -O https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
+bash Miniconda3-latest-Linux-x86_64.sh
+# follow prompts then reconnect
+```
 - Install extra packages
 ```bash
 sudo apt-get install -y git ntp
+```
+- Clone this repo
+```bash
+git clone https://github.com/tomwhite/gwas-benchmark
+cd gwas-benchmark
 ```
 - Create a conda environment
 ```bash
 conda env create -f envs/gwas-benchmark.yaml 
 conda activate gwas-benchmark
 ```
+- Start Jupyter
+```bash
+jupyter notebook
+```
+- Create a proxy from your local machine
+```bash
+gcloud beta compute ssh --zone "us-central1-a" "ukb-tw-gwas-benchmark" --ssh-flag="-L 8888:localhost:8888"
+```
+- Open the Jupyter URL
+
+## Other
+
+Copy notebook from VM back to local machine 
+```bash
+gcloud beta compute scp --zone "us-central1-a" "ukb-tw-gwas-benchmark:/home/tom/gwas-benchmark/gwas_simulation.ipynb" .
+```
+
