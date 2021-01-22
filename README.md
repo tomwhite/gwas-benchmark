@@ -57,6 +57,7 @@ Running XY-size on n1-standard-8
 | ----- | -------- |
 | In-memory, local storage  | 30 |
 | In-memory, GCS  | 70 |
+| Distributed (1 worker), local storage  | 43 |
 | Distributed (1 worker), GCS  | 95 |
 
-The distributed timing is roughly similar to the actual GWAS, which took 80s.
+The distributed/GCS timing is roughly similar to the actual GWAS, which took 80s.
