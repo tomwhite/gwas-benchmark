@@ -92,9 +92,26 @@ gcloud beta compute ssh --zone $GCP_ZONE $GCE_WORK_HOST --ssh-flag="-L 8888:loca
 ```
 - Open the Jupyter URL in a browser and open the notebook.
 
+## Running a Dask cluster
+
+- Connect to the development machine
+```bash
+source .env
+gcloud beta compute ssh --zone $GCP_ZONE $GCE_WORK_HOST
+```
+- Authenticate
+```bash
+gcloud auth login
+```
+- Follow the instructions in https://github.com/related-sciences/ukb-gwas-pipeline-nealelab#dask-cloud-provider
+- Create a proxy for the Dask UI (substitute the name of your scheduler instance)
+```bash
+gcloud beta compute ssh --zone $GCP_ZONE dask-06d1dd24-scheduler --ssh-flag="-L 8799:localhost:8787"
+```
+
 ## Miscellaneous useful commands
 
-Create a proxy for the Dask UI (when in distributed mode)
+Create a proxy for the Dask UI (when in distributed mode on the development machine, not the cloudprovider cluster)
 ```bash
 gcloud beta compute ssh --zone $GCP_ZONE $GCE_WORK_HOST --ssh-flag="-L 8799:localhost:8787"
 ```
@@ -112,13 +129,12 @@ gcloud beta compute scp --zone $GCP_ZONE "$GCE_WORK_HOST:gwas-benchmark/gwas_sim
 
 # Results
 
-Running XY-size on n1-standard-8
+Running XY-size on n1-standard-8 instances
 
-| Dask  | Time (s) |
-| ----- | -------- |
-| In-memory, local storage  | 30 |
-| In-memory, GCS  | 70 |
-| Distributed (1 worker), local storage  | 43 |
-| Distributed (1 worker), GCS  | 95 |
-
-The distributed/GCS timing is roughly similar to the actual GWAS, which took 80s.
+| Dask  | Time (s) | Notes |
+| ----- | -------- | ----- |
+| In-memory, local storage  | 30 | |
+| In-memory, GCS  | 70 | |
+| Distributed (1 worker), local storage  | 43 | |
+| Distributed (1 worker), GCS  | 95 | similar to the actual GWAS, which took 80s |
+| Distributed (4 workers), GCS  | 41 | 4x cluster gives ~2x speedup |
