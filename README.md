@@ -131,9 +131,9 @@ gcloud beta compute scp --zone $GCP_ZONE "$GCE_WORK_HOST:gwas-benchmark/reports/
 open $(ls -t reports/pr*.html | head -1)
 ```
 
-Copy the notebook from VM back to local machine (so it can be checked in to source control)
+Copy the notebooks from VM back to local machine (so they can be checked into source control)
 ```bash
-gcloud beta compute scp --zone $GCP_ZONE "$GCE_WORK_HOST:gwas-benchmark/gwas_simulation.ipynb" .
+gcloud beta compute scp --zone $GCP_ZONE "$GCE_WORK_HOST:gwas-benchmark/*.ipynb" .
 ```
 
 # Results
