@@ -43,7 +43,7 @@ gcloud beta compute --project=$GCP_PROJECT instances create $GCE_WORK_HOST \
     --maintenance-policy=MIGRATE \
     --service-account=$GCP_USER_EMAIL \
     --scopes=https://www.googleapis.com/auth/cloud-platform \
-    --image=debian-10-buster-v20201216 \
+    --image=debian-10-buster-v20210122 \
     --image-project=debian-cloud \
     --boot-disk-size=1000GB \
     --boot-disk-type=pd-standard \
@@ -75,24 +75,8 @@ git clone https://github.com/tomwhite/gwas-benchmark && cd gwas-benchmark
 source .env
 gcloud beta compute scp --zone $GCP_ZONE .env "$GCE_WORK_HOST:gwas-benchmark/.env"
 ```
-- Create a conda environment
-```bash
-source .env
-conda env create -f envs/gwas-benchmark.yaml 
-conda activate gwas-benchmark
-```
-- Start Jupyter
-```bash
-jupyter notebook
-```
-- Create a proxy from your local machine
-```bash
-source .env
-gcloud beta compute ssh --zone $GCP_ZONE $GCE_WORK_HOST --ssh-flag="-L 8888:localhost:8888"
-```
-- Open the Jupyter URL in a browser and open the notebook.
 
-## Running a Dask cluster
+## Run a Dask cluster
 
 - Connect to the development machine
 ```bash
@@ -108,6 +92,31 @@ gcloud auth login
 ```bash
 gcloud beta compute ssh --zone $GCP_ZONE dask-06d1dd24-scheduler --ssh-flag="-L 8799:localhost:8787"
 ```
+
+## Run the benchmark
+
+- Connect to the development machine
+```bash
+source .env
+gcloud beta compute ssh --zone $GCP_ZONE $GCE_WORK_HOST
+```
+- Create a conda environment
+```bash
+cd gwas-benchmark
+source .env
+conda env create -f envs/gwas-benchmark.yaml 
+conda activate gwas-benchmark
+```
+- Start Jupyter
+```bash
+jupyter notebook
+```
+- Create a proxy from your local machine
+```bash
+source .env
+gcloud beta compute ssh --zone $GCP_ZONE $GCE_WORK_HOST --ssh-flag="-L 8888:localhost:8888"
+```
+- Open the Jupyter URL in a browser and open the notebook.
 
 ## Miscellaneous useful commands
 
