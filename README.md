@@ -92,6 +92,7 @@ gcloud auth login
 ```bash
 gcloud beta compute ssh --zone $GCP_ZONE dask-06d1dd24-scheduler --ssh-flag="-L 8799:localhost:8787"
 ```
+- Open http://localhost:8799
 
 ## Run the benchmark
 
@@ -106,6 +107,13 @@ cd gwas-benchmark
 source .env
 conda env create -f envs/gwas-benchmark.yaml 
 conda activate gwas-benchmark
+```
+- Get the Dask cluster settings
+```bash
+export DASK_SCHEDULER_IP=`cat /tmp/scheduler-info.txt | grep internal_ip | cut -d'=' -f 2`
+export DASK_SCHEDULER_HOST=`cat /tmp/scheduler-info.txt | grep hostname | cut -d'=' -f 2`
+export DASK_SCHEDULER_ADDRESS=tcp://$DASK_SCHEDULER_IP:8786
+echo $DASK_SCHEDULER_HOST $DASK_SCHEDULER_ADDRESS
 ```
 - Start Jupyter
 ```bash
