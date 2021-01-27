@@ -88,8 +88,9 @@ gcloud beta compute ssh --zone $GCP_ZONE $GCE_WORK_HOST
 gcloud auth login
 ```
 - Follow the instructions in https://github.com/related-sciences/ukb-gwas-pipeline-nealelab#dask-cloud-provider
-- Create a proxy for the Dask UI (substitute the name of your scheduler instance)
+- Create a proxy for the Dask UI from your local machine (substitute the name of your scheduler instance)
 ```bash
+source .env
 gcloud beta compute ssh --zone $GCP_ZONE dask-06d1dd24-scheduler --ssh-flag="-L 8799:localhost:8787"
 ```
 - Open http://localhost:8799
