@@ -156,3 +156,5 @@ Running XY-size on n1-standard-8 instances
 | Distributed (1 worker), local storage  | 43 | |
 | Distributed (1 worker), GCS  | 95 | similar to the actual GWAS, which took 80s |
 | Distributed (4 workers), GCS  | 41 | 4x cluster gives ~2x speedup |
+
+For more results regarding scaling up the data size, see https://github.com/pystatgen/sgkit/issues/390#issuecomment-766820073
