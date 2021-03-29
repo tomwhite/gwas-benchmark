@@ -43,7 +43,7 @@ gcloud beta compute --project=$GCP_PROJECT instances create $GCE_WORK_HOST \
     --maintenance-policy=MIGRATE \
     --service-account=$GCP_USER_EMAIL \
     --scopes=https://www.googleapis.com/auth/cloud-platform \
-    --image=debian-10-buster-v20210122 \
+    --image=debian-10-buster-v20210217 \
     --image-project=debian-cloud \
     --boot-disk-size=1000GB \
     --boot-disk-type=pd-standard \
@@ -87,7 +87,19 @@ gcloud beta compute ssh --zone $GCP_ZONE $GCE_WORK_HOST
 ```bash
 gcloud auth login
 ```
-- Follow the instructions in https://github.com/related-sciences/ukb-gwas-pipeline-nealelab#dask-cloud-provider
+- Create a conda environment
+```bash
+cd gwas-benchmark
+source .env
+conda env create -f envs/cloudprovider.yaml 
+conda activate cloudprovider
+```
+- Run the script for creating a cluster
+```bash
+source config/dask/cloudprovider.sh
+python scripts/cluster/cloudprovider.py -- --interactive
+>>> create(n_workers=1, env_var_file='config/dask/env_vars.json')
+```
 - Create a proxy for the Dask UI from your local machine (substitute the name of your scheduler instance)
 ```bash
 source .env
