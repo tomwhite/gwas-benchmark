@@ -20,6 +20,9 @@ To run the benchmark notebook, the following infrastructure is used:
 The development VM is used to issue the GWAS code that run on the Dask clusters. In some cases no Dask cluster is
 needed since a (small) Dask cluster is run on the development VM.
 
+For reproducibility, the version of Dask is pinned to a fixed version. Care is needed to change the version used,
+in particular in the conda envs defined in the `envs` directory.
+
 ## Setup
 
 - Check out this repo on your local machine.
@@ -43,7 +46,7 @@ gcloud beta compute --project=$GCP_PROJECT instances create $GCE_WORK_HOST \
     --maintenance-policy=MIGRATE \
     --service-account=$GCP_USER_EMAIL \
     --scopes=https://www.googleapis.com/auth/cloud-platform \
-    --image=debian-10-buster-v20210122 \
+    --image=debian-10-buster-v20210217 \
     --image-project=debian-cloud \
     --boot-disk-size=1000GB \
     --boot-disk-type=pd-standard \
@@ -87,7 +90,21 @@ gcloud beta compute ssh --zone $GCP_ZONE $GCE_WORK_HOST
 ```bash
 gcloud auth login
 ```
-- Follow the instructions in https://github.com/related-sciences/ukb-gwas-pipeline-nealelab#dask-cloud-provider
+- Create a conda environment
+```bash
+cd gwas-benchmark
+source .env
+conda env create -f envs/cloudprovider.yaml 
+conda activate cloudprovider
+```
+- Run the script for creating a cluster
+```bash
+source config/dask/cloudprovider.sh
+python scripts/cluster/cloudprovider.py -- --interactive
+>>> create(n_workers=1, env_var_file='config/dask/env_vars.json', security=False)
+>>> scale(16)
+>>> export_scheduler_info()
+```
 - Create a proxy for the Dask UI from your local machine (substitute the name of your scheduler instance)
 ```bash
 source .env
@@ -145,16 +162,13 @@ Copy the notebooks from VM back to local machine (so they can be checked into so
 gcloud beta compute scp --zone $GCP_ZONE "$GCE_WORK_HOST:gwas-benchmark/*.ipynb" .
 ```
 
+Find the Python package versions for populating the conda envs in `envs`. Run on the scheduler machine for example
+```bash
+sudo docker run daskdev/dask:2021.3.1 conda env export -n base --from-history
+sudo docker run daskdev/dask:2021.3.1 conda env export -n base
+```
+
 # Results
 
-Running XY-size on n1-standard-8 instances
-
-| Dask  | Time (s) | Notes |
-| ----- | -------- | ----- |
-| In-memory, local storage  | 30 | |
-| In-memory, GCS  | 70 | |
-| Distributed (1 worker), local storage  | 43 | |
-| Distributed (1 worker), GCS  | 95 | similar to the actual GWAS, which took 80s |
-| Distributed (4 workers), GCS  | 41 | 4x cluster gives ~2x speedup |
-
-For more results regarding scaling up the data size, see https://github.com/pystatgen/sgkit/issues/390#issuecomment-766820073
+For results regarding scaling up the data size, see https://github.com/pystatgen/sgkit/issues/390#issuecomment-766820073 and
+https://github.com/pystatgen/sgkit/issues/448
